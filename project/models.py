@@ -30,11 +30,11 @@ class Location(db.Model):
     __tablename__ = 'locations'
 
     id = db.Column(db.Integer, primary_key=True)
+    lng = db.Column(db.Float)
     lat = db.Column(db.Float)
-    long = db.Column(db.Float)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, lat,long,user_id):
+    def __init__(self, lng,lat,user_id):
+        self.lng = lng
         self.lat = lat
-        self.long = long
         self.user_id = user_id

@@ -1,5 +1,5 @@
-from flask import Blueprint, redirect, render_template, url_for, request, flash
-from project.models import User
+from flask import Blueprint, redirect, render_template, url_for, request, flash, jsonify
+from project.models import User, Location
 from project.users.forms import UserForm, LoginForm
 from project import db
 from sqlalchemy.exc import IntegrityError
@@ -21,6 +21,9 @@ def ensure_correct_user(fn):
         return fn(*args, **kwargs)
     return wrapper
 
+@users_blueprint.route('/')
+def index():
+    return render_template('users/home.html')
 @users_blueprint.route('/signup', methods=["GET", "POST"])
 def signup():
     form = UserForm(request.form)
@@ -44,6 +47,7 @@ def login():
             if logged_in_user:
                 login_user(logged_in_user)
                 flash("You are now logged in!")
+                #CHECK THIS
                 return redirect(url_for('locations.new', user_id=logged_in_user.id))
         flash("Invalid Credentials")
     return render_template('users/login.html', form=form)
@@ -83,3 +87,11 @@ def logout():
     flash("Logged out!")
     logout_user()
     return redirect(url_for('users.login'))
+
+@users_blueprint.route('/data', methods=["GET"])
+def data():
+    user_locations = Location.query.all()
+    locations = []
+    for l in user_locations:
+        locations.append(dict(lat=l.lat, lng=l.lng))
+    return jsonify(locations)
