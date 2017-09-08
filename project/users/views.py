@@ -47,9 +47,8 @@ def login():
             if logged_in_user:
                 login_user(logged_in_user)
                 flash("You are now logged in!")
-                #CHECK THIS
                 return redirect(url_for('locations.new', user_id=logged_in_user.id))
-        flash("Invalid Credentials")
+        flash("Invalid Login")
     return render_template('users/login.html', form=form)
 
 @users_blueprint.route('/<int:id>/edit')

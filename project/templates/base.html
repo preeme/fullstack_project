@@ -39,8 +39,12 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
             <ul class="nav navbar-nav">
+                {% if current_user.is_authenticated %}
+                <li><a href="{{url_for('users.logout')}}">Logout</a></li>
+                {% else %}
                 <li><a href="{{url_for('users.signup')}}">Signup</a></li>
                 <li><a href="{{url_for('users.login')}}">Login</a></li>
+                {% endif %}
             </ul>
 
 
@@ -48,9 +52,11 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-    {% for message in get_flashed_messages() %}
-        {{ message }}
-    {% endfor %}
+    <div class="container" id="flash">
+        {% for message in get_flashed_messages() %}
+            <div class="alert">{{ message }}</div>
+        {% endfor %}
+    </div>
     {% block content %}
     {% endblock %}
 </body>

@@ -3,38 +3,45 @@
 {% block content %}
 
 <div class="container">
-    <form class="form-signin" method="POST" action="{{url_for('users.signup')}}">
+    <form method="POST" action="{{url_for('users.signup')}}">
       {{ form.csrf_token }}
-      <p>{{ form.username(placeholder="username") }}
+      <p>{{ form.username(placeholder="username", class="form-control") }}
         <span>
           {% if form.username.errors %}
             {% for error in form.username.errors %}
-              {{ error }}
+            <span class="text-danger">
+                {{ error }}
+            </span>
+
             {% endfor %}
           {% endif %}
         </span>
       </p>
       <p>
-        {{ form.password(placeholder="password") }}
+        {{ form.password(placeholder="password", class="form-control") }}
         <span>
           {% if form.password.errors %}
             {% for error in form.password.errors %}
-              {{ error }}
+            <span class="text-danger">
+                {{ error }}
+            </span>
             {% endfor %}
           {% endif %}
         </span>
       </p>
       <p>
-        {{ form.email(placeholder="email") }}
+        {{ form.email(placeholder="email", class="form-control") }}
         <span>
           {% if form.email.errors %}
             {% for error in form.email.errors %}
-              {{ error }}
+                <span class="text-danger">
+                    {{ error }}
+                </span>
             {% endfor %}
           {% endif %}
         </span>
       </p>
-      <button class"btn btn-lg btn-primary btn-block" type="submit">Sign Up!</button>
+      <button class="btn btn-success pull-right" type="submit">Sign Up!</button>
     </form>
 </div>
 
