@@ -90,48 +90,55 @@
         width: 345px;
       }
     </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQZuNa3DFGPC6IHSyraZDN93GGACFeLmk&libraries=places"
+         defer async></script>
   </head>
   <body>
     <input type="hidden" value="{{current_user.id}}" id="user-id">
     <div id="map"></div>
     <script>
         var map;
-        function initAutocomplete() {
-            var sanFrancisco = {lat: 37.7749, lng: -122.4194};
-            map = new google.maps.Map(document.getElementById('map'), {
-            center: sanFrancisco,
-            zoom: 11,
-            mapTypeId: 'roadmap',
-            mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
-        });
-        map.addListener('click', function(event) {
-            addMarker(event.latLng, map);
-        });
-        // Adds a marker to the map.
-        function addMarker(location, map) {
-        // Add the marker at the clicked location, and add the next-available label
-        // from the array of alphabetical characters.
-            marker = new google.maps.Marker({
-            position: location,
-            map: map
+
+        function initAutocomplete(data) {
+                var current = {lat: data.coords.latitude, lng: data.coords.longitude};
+                let map = new google.maps.Map(document.getElementById('map'), {
+                center: current,
+                zoom: 15,
+                mapTypeId: 'roadmap',
+                mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
             });
-            var currentId = document.getElementById('user-id').value
-            $.ajax({
-                method: "POST",
-                url: `/users/${currentId}/locations/`,
-                data: {
-                    lat: marker.getPosition().lng(),
-                    lng: marker.getPosition().lat()
-                }
-            }).then(function(response){
-                console.log(response);
-            })
-        }
-      }
+            map.addListener('click', function(event) {
+                addMarker(event.latLng, map);
+            });
+            // Adds a marker to the map.
+            function addMarker(location, map) {
+            // Add the marker at the clicked location, and add the next-available label
+            // from the array of alphabetical characters.
+                marker = new google.maps.Marker({
+                position: location,
+                map: map
+                });
+                var currentId = document.getElementById('user-id').value
+                $.ajax({
+                    method: "POST",
+                    url: `/users/${currentId}/locations/`,
+                    data: {
+                        lat: marker.getPosition().lng(),
+                        lng: marker.getPosition().lat()
+                    }
+                }).then(function(response){
+                    console.log(response);
+                })
+            }
+    }
+
+    navigator.geolocation.getCurrentPosition(function(data){
+        localStorage.setItem('result', JSON.stringify(data))
+        initAutocomplete(data)
+    })
+
 
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQZuNa3DFGPC6IHSyraZDN93GGACFeLmk&libraries=places&callback=initAutocomplete"
-         async defer></script>
   </body>
 </html>
 {% endblock %}
