@@ -37,7 +37,6 @@ def new(user_id):
 
 @locations_blueprint.route('/data', methods=["GET"])
 def data(user_id):
-    # MUST FIX THIS
     user_locations = User.query.get(user_id).locations
     locations = []
     for l in user_locations:
